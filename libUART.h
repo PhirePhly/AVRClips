@@ -22,7 +22,7 @@
 
 
 // CONSTANTS
-#define UART_BAUD	9600
+#define UART_BAUD	300
 #define UARTBUFSIZE 32
 
 #define UART_UBRR  (F_CPU/16/UART_BAUD - 1)
@@ -31,12 +31,12 @@
 
 struct _uart {
 	uint8_t txposition;
-	uint8_t txlength;
+	volatile uint8_t txlength;
 	char txbuf[UARTBUFSIZE];
 };
 volatile struct _uart uart;
 
-void UART_init(void)
+void UART_init(unsigned int baud)
 {
 	/*Set baud rate */
 	UBRR0H = (unsigned char)(UART_UBRR >> 8);
@@ -51,7 +51,7 @@ void UART_init(void)
 
 void UART_putchar(char c) {
 	// Spinlock on full buffer
-	while (uart.txlength >= UARTBUFSIZE-1);
+	while (uart.txlength >= UARTBUFSIZE-1) ; 
 	// Add character to buffer
 	uart.txbuf[(uart.txposition+uart.txlength)%UARTBUFSIZE] = c;
 	uart.txlength = (uart.txlength + 1) % UARTBUFSIZE;

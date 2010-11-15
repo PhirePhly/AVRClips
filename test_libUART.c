@@ -1,6 +1,6 @@
 // 2010 Kenneth Finnegan
 // kennethfinnegan.blogspot.com
-//
+
 
 #define F_CPU		16000000L    // Crystal frequency in Hz
 
@@ -8,8 +8,9 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <stdio.h>
 
-#include "libUART.h"
+#include "./libUART.h"
 
 // CONSTANTS
 
@@ -18,7 +19,7 @@
 // Handles display multiplexing
 SIGNAL (TIMER1_COMPA_vect)
 {
-	PORTD = ~PORTD;
+	//PORTD = ~PORTD;
 }
 
 int main(void)
@@ -35,15 +36,23 @@ int main(void)
 	// Enable interrupts
 	sei();
 
-	UART_init();
+	UART_init(4800);
+	UART_putchar('W');
+	UART_putchar('\n');
+	UART_putchar('\r');
 
-	UART_puts("Hello World!\n");
-	UART_puts("This is a longer message!\nLet's hope it works well enough...\n");
-	UART_puts("Hello World! 1\n");
-	UART_puts("Hello World! 2\n");
-	UART_puts("Hello World! 3\n");
+	UART_puts("Hello World!\n\r");
+	UART_puts("This is a longer message!\n\rLet's hope it works well enough...\n\r");
+	UART_puts("Hello World! 1\n\r");
+	UART_puts("Hello World! 2\n\r");
+	UART_puts("Hello World! 3\n\r");
+	unsigned int i = 0;
 	while (1) {
-		_delay_ms(1000);
+		i++;
 		PORTB ^= 0x20;
+		char charbuf[100];
+		sprintf(charbuf, "Loop number %d\n\r",i); 
+		UART_puts(charbuf);
 	}
 }
+
