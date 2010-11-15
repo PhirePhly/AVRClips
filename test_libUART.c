@@ -35,13 +35,13 @@ int main(void)
 	// Enable interrupts
 	sei();
 
-	UART_Init();
+	UART_init();
 
-	UART_tx("Hello World!\n");
-	UART_tx("This is a longer message!\nLet's hope it works well enough...\n");
-	UART_tx("Hello World! 1\n");
-	UART_tx("Hello World! 2\n");
-	UART_tx("Hello World! 3\n");
+	UART_puts("Hello World!\n");
+	UART_puts("This is a longer message!\nLet's hope it works well enough...\n");
+	UART_puts("Hello World! 1\n");
+	UART_puts("Hello World! 2\n");
+	UART_puts("Hello World! 3\n");
 	while (1) {
 		_delay_ms(1000);
 		PORTB ^= 0x20;
